@@ -28,6 +28,11 @@ class HashTable():
 
 def hash_quadratic(d):
 
+    """
+    Inserts keys from the list d into a hash table and returns the HashTable which contains the state of the hash table after these insertions.
+    Uses quadratic probing (see question for details) to resolve collisions.
+    """
+
     k = 31
     h = HashTable(k)
 
@@ -45,21 +50,32 @@ def hash_quadratic(d):
 
     return h
 
-    """
-    Inserts keys from the list d into a hash table and returns the HashTable which contains the state of the hash table after these insertions.
-    Uses quadratic probing (see question for details) to resolve collisions.
-    """
 
 def hash_double(d):
-    """Inserts keys from the list d into a hash table and
-    returns the HashTable which contains the state of the 
-    hash table after these insertions.
-
-    Use just one HashTable instance inside this function.
-    
-    Uses secondary hashing (see question for details) to resolve
-    collisions.
     """
+    Inserts keys from the list d into a hash table and returns the HashTable which contains the state of the hash table after these insertions.
+    Uses secondary hashing to resolve collisions.
+    """
+
+    k = 31
+    h = HashTable(k)
+
+    for input in d:
+        hashFunction = ((2 * input + 11) % k)
+        
+        if h.lookup(hashFunction) == "-":
+            h.add(hashFunction, input)
+        else:
+            i = 1
+            offset = (19 - (input % 19))
+            while h.lookup(hashFunction) != "-":
+                hashFunction = ((((2 * input + 11) % k) + i * offset) % 19)
+                i += 1
+            h.add(hashFunction, input)
+
+    return h
+
+
 
 #Test casese
 def test_hash_quadratic():
