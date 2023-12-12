@@ -34,17 +34,10 @@ class LLStack:
         return self._head._element
 
     def pop(self):
-        #FIX
         if self.is_empty():
-            raise Exception
+            raise Exception("Stack is empty")
+        answer = self._head._element
         self._head = self._head._next
         self._size -= 1
-        answer = self._head._element
-
+        
         return answer
-
-
-mystack = LLStack()
-mystack.push(3)
-mystack.push(12)
-print (mystack.top())
