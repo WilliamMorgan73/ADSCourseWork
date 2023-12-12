@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[9]:
-
-
 class LLStack:
     """
     Implements a stack using a singly-linked list.
@@ -34,12 +28,23 @@ class LLStack:
         return self._size == 0
 
     def push(self, e):
-        raise NotImplementedError
+        #HERE IS WHERE THE CODE
+        newest = self._head
+        if newest == self._size:
+            raise Exception("Stack is full")
+        else:
+            self._size += 1
+            newest._next == e
+        
 
     def top(self):
+        if self.is_empty():
+            raise Exception("Stack is empty")
+        
         return self._head._element
 
     def pop(self):
+        #FIX
         if self.is_empty():
             raise Exception
         self._head = self._head._next
@@ -47,6 +52,11 @@ class LLStack:
         answer = self._head._element
 
         return answer
+
+
+mystack = LLStack()
+mystack.push(3)
+print (mystack.top())
 
 
 class LLQueue:
