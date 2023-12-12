@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[20]:
-
-
 # I is a list-of-lists representation of a 3x3 black-and-white image
 I = [
   [0, 1, 0], 
@@ -26,7 +20,18 @@ R = [
 ]
 
 
-# In[21]:
+def apply_mask(M, T):
+    i = 0
+    R = []
+
+    for i in range(len(M)):
+        result_row = []
+        for j in range(len(M[0])):
+            result_row.append(M[i][j] & T[i][j])
+        R.append(result_row)
+
+    return R
+
 
 
 def q1_simple_tests():
