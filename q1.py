@@ -40,32 +40,54 @@ def apply_mask(M, T):
 
 def encode(I):
     encoding = ''
-    current_color = 'B' if I[0][0] == 0 else 'W'
+    currentColour = 'B' if I[0][0] == 0 else 'W'
     count = 0
 
     for row in I:
         for pixel in row:
             if pixel == 0:
-                pixel_color = 'B'
+                pixelColour = 'B'
             else:
-                pixel_color = 'W'
+                pixelColour = 'W'
 
-            if pixel_color == current_color:
+            if pixelColour == currentColour:
                 count += 1
             else:
-                encoding += f"{current_color}{count}"
-                current_color = pixel_color
+                encoding += f"{currentColour}{count}"
+                currentColour = pixelColour
                 count = 1
 
-    encoding += f"{current_color}{count}"
+    encoding += f"{currentColour}{count}"
 
     return encoding
     
 def decode(S):
-    
+    matrixSize = int((sum(int(char) for char in S[1:] if char.isdigit())) ** 0.5)
+    matrix = [[0] * matrixSize for _ in range(matrixSize)]
+    currentColour = S[0]
+    count = 0
+    rowIndex, colIndex = 0, 0
+
+    for char in S[1:]:
+        if char == 'B' or char == 'W':
+            currentColour = char
+            count = 0  # Reset count when colour changes
+        elif char.isdigit():
+            count = count * 10 + int(char)  # Update count based on the digit
+            #*10, as working in base 10. E.g., Could be B12, therefore would get 1 * 10 + 2.
+            for _ in range(int(char)):
+                matrix[rowIndex][colIndex] = 1 if currentColour == 'W' else 0
+                colIndex += 1
+                if colIndex == matrixSize:
+                    colIndex = 0
+                    rowIndex += 1
+                    if rowIndex == matrixSize:
+                        rowIndex = 0
+
+    return matrix
 
 def apply_mask_encoded(M_e, T_e):
-    
+    return 0
 
 def q1_simple_tests():
     assert(apply_mask(I, J) == R)
@@ -73,4 +95,5 @@ def q1_simple_tests():
     assert(encode(J) == 'B2W1B1W1B1W1B2')
     assert(decode('B1W1B2W5') == I)
     assert(apply_mask_encoded(encode(I), encode(J)) == encode(R))
+
 
