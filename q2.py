@@ -37,12 +37,18 @@ class LLStack:
         
 
     def top(self):
+        """
+        Returns the element at the top of the stack
+        """
         if self.is_empty():
             raise Exception("Stack is empty")
         
         return self._head._element
 
     def pop(self):
+        """
+        Removes the element at the top of the stack
+        """
         if self.is_empty():
             raise Exception("Stack is empty")
         answer = self._head._element
@@ -50,6 +56,8 @@ class LLStack:
         self._size -= 1
         
         return answer
+    
+    
 
 class ModStack:
     """
@@ -88,8 +96,54 @@ class ModStack:
             self._head = newest
             self._size += 1
 
+        
+
+    def pop(self):
+        """
+        Removes the element at the top of the stack
+        """
+        if self.is_empty():
+            raise Exception("Stack is empty")
+        answer = self._head._element
+        self._head = self._head._next
+        self._size -= 1
+        
+        return answer
+    
+
     def smallest(self):
         """
         Returns the smallest value on the stack
         """
+        if self.is_empty():
+            raise Exception("Stack is empty")
+
+        current = self._head
+        min_val = current._element
+
+        while current:
+            min_val = min(min_val, current._element)
+            current = current._next
+
+        return min_val
+    
+
+def reverse(queue):
+    """
+    Reverses a queue using a stack
+    To do so, dequeue elements from a queue, and push them into a stack and then enqueue them to a new queue
+    """
+    
+    stack = LLStack()
+    reverseQueue = LLQueue()
+    
+    #Dequeue elements and push them onto a stack
+    while not queue.is_empty():
+        stack.push(queue.dequeue())
+    
+    #Add them to the back of the reverse queue
+    while not stack.is_empty():
+        reverseQueue.enqueue(stack.pop())
         
+    return reverseQueue
+
