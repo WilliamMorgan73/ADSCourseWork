@@ -62,8 +62,8 @@ def encode(I):
     return encoding
     
 def decode(S):
-    matrixSize = int((sum(int(char) for char in S[1:] if char.isdigit())) ** 0.5)
-    matrix = [[0] * matrixSize for _ in range(matrixSize)]
+    matrixSize = int((sum(int(char) for char in S[1:] if char.isdigit())) ** 0.5) #If able to, rewrite this line to make look nicer.
+    matrix = [[0] * matrixSize for _ in range(matrixSize)]   #And this line
     currentColour = S[0]
     count = 0
     rowIndex, colIndex = 0, 0
@@ -74,9 +74,9 @@ def decode(S):
             count = 0  # Reset count when colour changes
         elif char.isdigit():
             count = count * 10 + int(char)  # Update count based on the digit
-            #*10, as working in base 10. E.g., Could be B12, therefore would get 1 * 10 + 2.
+            #*10 as Could be B12, therefore would get 1 * 10 + 2.
             for _ in range(int(char)):
-                matrix[rowIndex][colIndex] = 1 if currentColour == 'W' else 0
+                matrix[rowIndex][colIndex] = 1 if currentColour == 'W' else 0     #Rewrite this to be less compact version
                 colIndex += 1
                 if colIndex == matrixSize:
                     colIndex = 0
@@ -87,7 +87,14 @@ def decode(S):
     return matrix
 
 def apply_mask_encoded(M_e, T_e):
-    return 0
+    matrixSize = int((sum(int(char) for char in M_e[1:] if char.isdigit())))
+    i = 1
+    while i < matrixSize:
+      #Check if B or W, copy code from decode for char = B or W and the count * 10 to get the number of pixels for each colour
+      
+
+
+
 
 def q1_simple_tests():
     assert(apply_mask(I, J) == R)
@@ -96,4 +103,7 @@ def q1_simple_tests():
     assert(decode('B1W1B2W5') == I)
     assert(apply_mask_encoded(encode(I), encode(J)) == encode(R))
 
+print(apply_mask_encoded(encode(I), encode(J)) == encode(R))
+print(apply_mask_encoded(encode(I),encode(J)))
 
+print(encode(R))

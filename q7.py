@@ -1,13 +1,10 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
 
 def Merge3Way(L1,L2,L3):
     """ Merge the three lists L1, L2, L3 that are sorted
     in non-increasing order into a new list L that is
     sorted in non-increasing order, and return L """
+
+    #Non increasing means every time after words is less than or equal to
     
 def Merge3Sort(L):
     """ If L has at most three elements, sort L into
