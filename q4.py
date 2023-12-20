@@ -1,54 +1,74 @@
-def generate_bruckner(n):
-    # Base case, if n < 2
-    if n < 2:
-        return []
+from itertools import permutations
 
-    # Initialize variables
-    output = []
+def is_valid_placement(matrix, row, col, permutation):
+    # Check if each value of the permutation is unique in the current row and column
+    
+    for i in range(row):
+        #Check if the current value is unique in the current row
+        
+        if matrix[row][i] == permutation[col]:
+            return False
+        #Check if the current value is unique in the current column
+        if matrix[i][col] == permutation[col]:
+            return False
+    return True
 
+def generateRow(matrix, row, n):
+    if row == n:
+        return True  # All rows filled, buckner matrix generated
+
+    #Generate all permutations of the numbers from 1 to n
+    for permutation in permutations(range(1, n + 1)):
+        #Attempt to fill the current row with the current permutation
+        for i in range(n):
+            # Check if the current permutation is a valid placement
+            if is_valid_placement(matrix, row, i, list(permutation)):
+                # Valid placement, fill the current row with the current permutation
+                matrix[row] = list(permutation)
+
+                break
+            
+            #If the current permutation is not a valid placement, try the next permutation
+            else:
+                continue
+            
+            #If all permutations have been tried and no valid placement is found, backtrack, unless the current row is the second row
+            
+    
+
+def generateIndividualBruckner(n, permutation):
     # Initialize an empty list of lists with n rows and n columns
-    for i in range(n):
-        output.append([])
+    output = [[0] * n for _ in range(n)]
 
-    # Updated first row of output to be from n to 1
-    for i in range(n, 0, -1):
-        output[0].append(i)
+    # First row is based on the given permutation
+    output[0] = permutation
 
-    # Loop for each row (1 to n)
-    for CurrentRow in range(1, n):
-        currentIndex = 0  # Reset currentIndex at the beginning of each row
+    # Generate each row from the 2nd row onwards
+    for row in range(1, n):
+        # Recursively attempt to fill row
+        if generateRow(output, row, n):
+            # Row filled, continue to the next row
+            continue
 
-        # Loop for each column (0 to n-1)
-        for j in range(n):
-            # Check if current index is at the end of the row
-            if currentIndex == n:
-                break  # Break the column loop if currentIndex exceeds n
+        else:
+            # Backtrack if no valid value found for the current row
+            for i in range(row, n):
+                output[i][i] = 0
 
-            # Initialize tempValue to n (largest value)
-            tempValue = n
-
-            # Check if tempValue exists in the same index as currentIndex in all the previous lists within the list
-            while any(tempValue == output[i][currentIndex] for i in range(CurrentRow)):
-                # If it does, decrement tempValue until it doesn't
-                tempValue -= 1
-
-            # Check if tempValue exists in rows above (same index)
-            while tempValue in output[:CurrentRow]:
-                # If it does, decrement tempValue until it doesn't
-                tempValue -= 1
-
-            # Check if tempValue exists in indices before currentIndex in the current row
-            while tempValue in output[CurrentRow][:currentIndex]:
-                # If it does, decrement tempValue until it doesn't
-                tempValue -= 1
-
-            # Append tempValue to output list with the correct index and row (which list within the list)
-            output[CurrentRow].append(tempValue)
-
-            # Increment index for the next column
-            currentIndex += 1
-
-    # Return the output
     return output
 
-print(generate_bruckner(4))
+def generate_bruckner(n):
+    result = []
+
+    # Loop through all permutations of the numbers from 1 to n
+    for permutation in permutations(range(1, n + 1)):
+        # Generate the Bruckner matrix for the current permutation and add it to the result
+        brucknerMatrix = generateIndividualBruckner(n, permutation)
+        result.append(brucknerMatrix)
+
+    return result
+
+# Example: Generate all Bruckner matrices of size 4
+bruckner_matrices_4 = generate_bruckner(4)
+for brucknerMatrix in bruckner_matrices_4:
+    print(brucknerMatrix)
