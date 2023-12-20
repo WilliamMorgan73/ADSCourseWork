@@ -1,77 +1,69 @@
 from itertools import permutations
 
 def is_valid_placement(matrix, row, permutation):
-    # Check if each value of the permutation is unique in the current row and the respective column
     for i in range(len(permutation)):
-        # Check if the current value is unique in the current row
         if permutation[i] in matrix[row]:
             return False
-
-        # Check if the current value is unique in the respective column
         for j in range(row):
             if permutation[i] == matrix[j][i]:
                 return False
-            
     return True
     
-    
+def permutationUsedBefore(matrix, row, permutation, brucknerMatrix):
+    for permutations in brucknerMatrix:
+        if permutations[0] == matrix[0]:
+            if permutations[row] == permutation:
+                return True
+    return False
 
-def generateRow(matrix, row, n):
+def generateRow(matrix, row, n, brucknerMatrix):
     if row == n:
         return True  # All rows filled, buckner matrix generated
 
-    #Generate all permutations of the numbers from 1 to n
     for permutation in permutations(range(1, n + 1)):
-        # Check if the current permutation is a valid placement
-        if is_valid_placement(matrix, row, list(permutation)):
-            # Valid placement, fill the current row with the current permutation
+        if is_valid_placement(matrix, row, list(permutation)) and not permutationUsedBefore(matrix, row, list(permutation), brucknerMatrix):
             matrix[row] = list(permutation)
-            break
+            # Recursively attempt to fill the next row
+            if generateRow(matrix, row + 1, n, brucknerMatrix):
+                # If a solution is found, append a copy of the matrix to the result
+                brucknerMatrix.append([row[:] for row in matrix])
+            # Reset the current placement
+            matrix[row] = [0] * n
             
-        #If the current permutation is not a valid placement, try the next permutation
-        else:
-            continue
-            
-        #If all permutations have been tried and no valid placement is found, backtrack, unless the current row is the second row
-        return False
-    
+    return False
 
-def generateIndividualBruckner(n, permutation):
-    # Initialize an empty list of lists with n rows and n columns
+def generateIndividualBruckner(n, permutation, brucknerMatrix):
     output = [[0] * n for _ in range(n)]
-
-    # First row is based on the given permutation
     output[0] = permutation
-
     # Generate each row from the 2nd row onwards
-    for row in range(1, n):
-        # Recursively attempt to fill row
-        if generateRow(output, row, n):
-            # Row filled, continue to the next row
-            continue
-
-        else:
-            # Backtrack if no valid value found for the current row
-            row = 1
-
-    return output
+    generateRow(output, 1, n, brucknerMatrix)
 
 def generate_bruckner(n):
     result = []
-
-    # Loop through all permutations of the numbers from 1 to n
     for permutation in permutations(range(1, n + 1)):
-        # Generate the Bruckner matrix for the current permutation and add it to the result
-        brucknerMatrix = generateIndividualBruckner(n, permutation)
-
-        
-        result.append(brucknerMatrix)
-
+        generateIndividualBruckner(n, permutation, result)
     return result
 
+# Example: Generate all Bruckner matrices of size 3
+bruckner_matrices_3 = generate_bruckner(3)
+for brucknerMatrix in bruckner_matrices_3:
+    print(brucknerMatrix)
+
+#Print length of bruckner_matrices_3
+print(len(bruckner_matrices_3))
+
 # Example: Generate all Bruckner matrices of size 4
-bruckner_matrices_4 = generate_bruckner(5)
+bruckner_matrices_4 = generate_bruckner(4)
 for brucknerMatrix in bruckner_matrices_4:
     print(brucknerMatrix)
-    
+
+#Print length of bruckner_matrices_4
 print(len(bruckner_matrices_4))
+
+# Example: Generate all Bruckner matrices of size 5
+bruckner_matrices_5 = generate_bruckner(5)
+for brucknerMatrix in bruckner_matrices_5:
+    print(brucknerMatrix)
+    
+#Print length of bruckner_matrices_5
+print(len(bruckner_matrices_5))
