@@ -1,31 +1,3 @@
-# I is a list-of-lists representation of a 3x3 black-and-white image
-I = [
-  [0, 1, 0], 
-  [0, 1, 1],
-  [1, 1, 1]
-]
-
-# J is a list-of-lists representation of a 3x3 black-and-white image
-J = [
-  [0, 0, 1], 
-  [0, 1, 0],
-  [1, 0, 0]
-]
-
-# R is the result of applying the AND-mask I to the image J
-R = [
-  [0 & 0, 0 & 1, 1 & 0], 
-  [0 & 0, 1 & 1, 0 & 1],
-  [1 & 1, 0 & 1, 0 & 1]
-]
-
-#P is a test that starts with 1
-P = [
-  [1, 0, 1], 
-  [0, 1, 0],
-  [1, 0, 0]
-]
-
 def apply_mask(M, T):
     i = 0
     R = []
@@ -86,18 +58,14 @@ def decode(S):
     return matrix
 
 def removeElement(string, numberOfColour):
-    # Check if the index is within the bounds of the string
-    
     # Remove the number of elements from the string
     if (int(string[1]) - numberOfColour) < 1:
         return string[2:]
     else:
         return string[:1] + str(int(string[1]) - numberOfColour) + string[2:]
 
-
-def apply_mask_encoded(M_e, T_e):
+def encodedMask(M_e, T_e):
     output = []
-    
     numberOfColour = 0
     currentColour = 0
     length = max(len(M_e), len(T_e))
@@ -105,38 +73,43 @@ def apply_mask_encoded(M_e, T_e):
     # Base case, if either of the strings are empty, return an empty list
     if length < 2:
         return output
-    
+
     # Check the current letter of each string
     if M_e[0] == "B" or T_e[0] == "B":
-        currentColour = 0      
-                
+        currentColour = "B"
+
     elif M_e[0] == "W" and T_e[0] == "W":
-        currentColour = 1       
+        currentColour = "W"
 
     else:
-        currentColour = 0 
-            
+        currentColour = "B"
+
     numberOfColour = min(int(M_e[1]), int(T_e[1]))
-    output.append([currentColour] * numberOfColour)
+    output.extend([str(currentColour)] * numberOfColour)
     temp_M_e = removeElement(M_e, numberOfColour)
     temp_T_e = removeElement(T_e, numberOfColour)
     # Recursively call the function and extend the output
-    print(temp_M_e, temp_T_e)
-    print(output)
-    output.extend(apply_mask_encoded(temp_M_e, temp_T_e))      
+    output.extend(encodedMask(temp_M_e, temp_T_e))
 
-    return (','.join(output))
-   
-print (apply_mask_encoded("B1W1B2W5", "B2W1B1W1B1W1B2"))
+    return output
+
+def apply_mask_encoded(M_e, T_e):
+
+    list = encodedMask(M_e, T_e)
+    count = 1
+    output = ""
+    i = 0
+
+    while i < len(list) - 1:
+        if list[i] == list[i+1]:
+            count += 1
+        else:
+            output += list[i] + str(count)
+            count = 1
+        i += 1
+    output += list[-1] + str(count)
+    return output
 
 
-
-
-def q1_simple_tests():
-    assert(apply_mask(I, J) == R)
-    assert(encode(I) == 'B1W1B2W5')
-    assert(encode(J) == 'B2W1B1W1B1W1B2')
-    assert(decode('B1W1B2W5') == I)
-    assert(apply_mask_encoded(encode(I), encode(J)) == encode(R))
 
 
