@@ -39,16 +39,20 @@ def completeBruckner(bruckner, row, col, allBruckners):
             # Backtrack when the above call returns to try other possibilities
             bruckner[row][col] = 0  
             
-def generateAllBruckners(input):
-    #base case, if input is less than 2, return empty list
-    if input < 2:
+def generate_bruckner(n):
+    """
+    Generates a list of all possible bruckner squares of size n.
+    """
+    #base case, if input(n) is less than 2, return empty list
+    if n < 2:
         return []
     
     #Create a list of lists of 0s with row and column length of input (square)
-    bruckner = [[0] * input for _ in range(input)]
+    bruckner = [[0] * n for _ in range(n)]
     #Create a list to store all the bruckners
     bruckners = []
     
     completeBruckner(bruckner, 0, 0, bruckners)
 
     return bruckners
+
