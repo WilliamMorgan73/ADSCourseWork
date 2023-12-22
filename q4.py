@@ -40,11 +40,13 @@ def completeBruckner(bruckner, row, col, allBruckners):
             bruckner[row][col] = 0  
             
 def generateAllBruckners(input):
+    #base case, if input is less than 2, return empty list
     if input < 2:
         return []
     
     #Create a list of lists of 0s with row and column length of input (square)
     bruckner = [[0] * input for _ in range(input)]
+    #Create a list to store all the bruckners
     bruckners = []
     
     completeBruckner(bruckner, 0, 0, bruckners)
