@@ -1,69 +1,52 @@
-from itertools import permutations
-
-def is_valid_placement(matrix, row, permutation):
-    for i in range(len(permutation)):
-        if permutation[i] in matrix[row]:
+def isValid(bruckner, row, col, num):
+    """
+    Checks if current placement of 'num' in the Bruckner list is valid.
+    """
+    # Check if 'num' is not present in the current row and column
+    for i in range(len(bruckner)):
+        if num in bruckner[row] or bruckner[i][col] == num:
             return False
-        for j in range(row):
-            if permutation[i] == matrix[j][i]:
-                return False
     return True
-    
-def permutationUsedBefore(matrix, row, permutation, brucknerMatrix):
-    for permutations in brucknerMatrix:
-        if permutations[0] == matrix[0]:
-            if permutations[row] == permutation:
-                return True
-    return False
+   
 
-def generateRow(matrix, row, n, brucknerMatrix):
-    if row == n:
-        return True  # All rows filled, buckner matrix generated
+def completeBruckner(bruckner, row, col, allBruckners):
+    """
+    Solves the bruckner square using backtracking and recursion.
+    """
+    #Get the length of the bruckner
+    length= len(bruckner)
 
-    for permutation in permutations(range(1, n + 1)):
-        if is_valid_placement(matrix, row, list(permutation)) and not permutationUsedBefore(matrix, row, list(permutation), brucknerMatrix):
-            matrix[row] = list(permutation)
-            # Recursively attempt to fill the next row
-            if generateRow(matrix, row + 1, n, brucknerMatrix):
-                # If a solution is found, append a copy of the matrix to the result
-                brucknerMatrix.append([row[:] for row in matrix])
-            # Reset the current placement
-            matrix[row] = [0] * n
+    # If all rows are filled, add the bruckner to the list
+    if row == length:
+        allBruckners.append([row[:] for row in bruckner])
+        return
+
+    # Try placing numbers in the current row
+    for num in range(1, length + 1):
+        if isValid(bruckner, row, col, num):
+            bruckner[row][col] = num
+
+            # Move to the next column or next row if the column is at the end
+            if (col+1) == length:
+                next_row = row + 1
+            else:
+                next_row = row
             
-    return False
+            next_col = (col + 1) % length
 
-def generateIndividualBruckner(n, permutation, brucknerMatrix):
-    output = [[0] * n for _ in range(n)]
-    output[0] = permutation
-    # Generate each row from the 2nd row onwards
-    generateRow(output, 1, n, brucknerMatrix)
+            completeBruckner(bruckner, next_row, next_col, allBruckners)
 
-def generate_bruckner(n):
-    result = []
-    for permutation in permutations(range(1, n + 1)):
-        generateIndividualBruckner(n, permutation, result)
-    return result
-
-# Example: Generate all Bruckner matrices of size 3
-bruckner_matrices_3 = generate_bruckner(3)
-for brucknerMatrix in bruckner_matrices_3:
-    print(brucknerMatrix)
-
-#Print length of bruckner_matrices_3
-print(len(bruckner_matrices_3))
-
-# Example: Generate all Bruckner matrices of size 4
-bruckner_matrices_4 = generate_bruckner(4)
-for brucknerMatrix in bruckner_matrices_4:
-    print(brucknerMatrix)
-
-#Print length of bruckner_matrices_4
-print(len(bruckner_matrices_4))
-
-# Example: Generate all Bruckner matrices of size 5
-bruckner_matrices_5 = generate_bruckner(5)
-for brucknerMatrix in bruckner_matrices_5:
-    print(brucknerMatrix)
+            # Backtrack when the above call returns to try other possibilities
+            bruckner[row][col] = 0  
+            
+def generateAllBruckners(input):
+    if input < 2:
+        return []
     
-#Print length of bruckner_matrices_5
-print(len(bruckner_matrices_5))
+    #Create a list of lists of 0s with row and column length of input (square)
+    bruckner = [[0] * input for _ in range(input)]
+    bruckners = []
+    
+    completeBruckner(bruckner, 0, 0, bruckners)
+
+    return bruckners
