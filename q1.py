@@ -85,67 +85,51 @@ def decode(S):
 
     return matrix
 
-def removeElement(string, index, numberOfColour):
+def removeElement(string, numberOfColour):
     # Check if the index is within the bounds of the string
-    if index + 1 < len(string):
-        # Remove the number of elements from the string
-        if (int(string[index + 1]) - numberOfColour) < 1:
-            return string[2:]
-        else:
-            return string[:index + 1] + str(int(string[index + 1]) - numberOfColour) + string[index + 2:]
+    
+    # Remove the number of elements from the string
+    if (int(string[1]) - numberOfColour) < 1:
+        return string[2:]
     else:
-        return string
+        return string[:1] + str(int(string[1]) - numberOfColour) + string[2:]
+
 
 def apply_mask_encoded(M_e, T_e):
     output = []
-
+    
     numberOfColour = 0
-    length = max(len(M_e), len(T_e))  # Use the max length
+    currentColour = 0
+    length = max(len(M_e), len(T_e))
 
     # Base case, if either of the strings are empty, return an empty list
-    if len(M_e) <2 or len(T_e) <2:
+    if length < 2:
         return output
+    
+    # Check the current letter of each string
+    if M_e[0] == "B" or T_e[0] == "B":
+        currentColour = 0      
+                
+    elif M_e[0] == "W" and T_e[0] == "W":
+        currentColour = 1       
 
-    # Loop through each element of the strings
-    for i in range(length):
-        # Check if the index is within the bounds of the strings
-        if i < len(M_e) and i < len(T_e):
-            # Check the current letter of each string
-            if M_e[i] == "B" or T_e[i] == "B":
-                # Check larger number of B'
-                numberOfColour = min(int(M_e[i + 1]), int(T_e[i + 1]))
-                output.append([0] * numberOfColour)
-                temp_M_e = removeElement(M_e, i, numberOfColour)
-                temp_T_e = removeElement(T_e, i, numberOfColour)
-                # Recursively call the function and extend the output
-                print(temp_M_e, temp_T_e)
-                print(output)
-                output.extend(apply_mask_encoded(temp_M_e, temp_T_e))
+    else:
+        currentColour = 0 
+            
+    numberOfColour = min(int(M_e[1]), int(T_e[1]))
+    output.append([currentColour] * numberOfColour)
+    temp_M_e = removeElement(M_e, numberOfColour)
+    temp_T_e = removeElement(T_e, numberOfColour)
+    # Recursively call the function and extend the output
+    print(temp_M_e, temp_T_e)
+    print(output)
+    output.extend(apply_mask_encoded(temp_M_e, temp_T_e))      
 
-            elif M_e[i] == "W" and T_e[i] == "W":
-                # Check larger number of W's
-                numberOfColour = min(int(M_e[i + 1]), int(T_e[i + 1]))
-                output.append([1] * numberOfColour)
-                temp_M_e = removeElement(M_e, i, numberOfColour)
-                temp_T_e = removeElement(T_e, i, numberOfColour)
-                # Recursively call the function and extend the output
-                print(temp_M_e, temp_T_e)
-                print(output)
-                output.extend(apply_mask_encoded(temp_M_e, temp_T_e))
-
-            else:
-                # Check largest number of W's
-                numberOfColour = min(int(M_e[i + 1]), int(T_e[i + 1]))
-                output.append([0] * numberOfColour)
-                temp_M_e = removeElement(M_e, i, numberOfColour)
-                temp_T_e = removeElement(T_e, i, numberOfColour)
-                # Recursively call the function and extend the output
-                print(temp_M_e, temp_T_e)
-                print(output)
-                output.extend(apply_mask_encoded(temp_M_e, temp_T_e))
-
-    return output
+    return (','.join(output))
    
+print (apply_mask_encoded("B1W1B2W5", "B2W1B1W1B1W1B2"))
+
+
 
 
 def q1_simple_tests():
@@ -155,4 +139,4 @@ def q1_simple_tests():
     assert(decode('B1W1B2W5') == I)
     assert(apply_mask_encoded(encode(I), encode(J)) == encode(R))
 
-print (apply_mask_encoded(encode(I), encode(J)))
+
