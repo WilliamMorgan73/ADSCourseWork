@@ -50,13 +50,13 @@ def Merge3Sort(L):
     else:
         # Recursive case: split the list into three sub-lists
         length = len(L)
-        marker1 = length // 3
-        marker2 = (2 * length) // 3
+        marker1 = length // 3 # one third of the length
+        marker2 = (2 * length) // 3 # two thirds of the length
 
         # Make three recursive calls on sub-lists
-        L1 = Merge3Sort(L[:marker1])
-        L2 = Merge3Sort(L[marker1:marker2])
-        L3 = Merge3Sort(L[marker2:])
+        L1 = Merge3Sort(L[:marker1]) # from 0 to marker1
+        L2 = Merge3Sort(L[marker1:marker2]) # from marker1 to marker2
+        L3 = Merge3Sort(L[marker2:]) # from marker2 to the end
 
         # Merge the three sorted sub-lists using Merge3Way
         return Merge3Way(L1, L2, L3)
