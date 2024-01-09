@@ -96,7 +96,14 @@ class ModStack:
             self._head = newest
             self._size += 1
 
+    def top(self):
+        """
+        Returns the element at the top of the stack
+        """
+        if self.is_empty():
+            raise Exception("Stack is empty")
         
+        return self._head._element
 
     def pop(self):
         """
