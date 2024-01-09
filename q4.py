@@ -11,7 +11,7 @@ def isValid(bruckner, row, col, num):
 
 def completeBruckner(bruckner, row, col, allBruckners):
     """
-    Solves the bruckner square using backtracking and recursion.
+    Solves the bruckner using backtracking and recursion.
     """
     #Get the length of the bruckner
     length= len(bruckner)
@@ -32,6 +32,7 @@ def completeBruckner(bruckner, row, col, allBruckners):
             else:
                 next_row = row
             
+            # If the column is at the end, move to the next row
             next_col = (col + 1) % length
 
             completeBruckner(bruckner, next_row, next_col, allBruckners)
@@ -41,13 +42,13 @@ def completeBruckner(bruckner, row, col, allBruckners):
             
 def generate_bruckner(n):
     """
-    Generates a list of all possible bruckner squares of size n.
+    Generates a list of all possible bruckners of size n.
     """
     #base case, if input(n) is less than 2, return empty list
     if n < 2:
         return []
     
-    #Create a list of lists of 0s with row and column length of input (square)
+    #Create a list of lists of 0s with row and column length of input
     bruckner = [[0] * n for _ in range(n)]
     #Create a list to store all the bruckners
     bruckners = []

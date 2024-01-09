@@ -1,4 +1,3 @@
-
 def Merge3Way(L1,L2,L3):
     """ Merge the three lists L1, L2, L3 that are sorted
     in non-increasing order into a new list L that is
@@ -8,6 +7,7 @@ def Merge3Way(L1,L2,L3):
 
     while L1 or L2 or L3:
         # Get the minimum value among the current elements from L1, L2, and L3
+        # If L1 is empty, set min_val to infinity so that it will not be chosen
         min_val = min(L1[-1] if L1 else float('inf'),
                       L2[-1] if L2 else float('inf'),
                       L3[-1] if L3 else float('inf'))
@@ -24,9 +24,6 @@ def Merge3Way(L1,L2,L3):
             L3.pop()
 
     return L[::-1]
-
-
-
     
 def Merge3Sort(L):
     """ If L has at most three elements, sort L into
